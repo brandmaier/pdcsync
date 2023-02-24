@@ -1,6 +1,6 @@
 library(pdc)
 library(tidyverse)
-
+library(ggplot2)
 
 #' @title pdc_synchrony
 #'
@@ -54,6 +54,7 @@ pdc_synchrony <- function(t1,
   max_len <- (len - segment_width - 1)
   
   # first time point of return object corresponds to
+  #
 
   rr <- sapply(1:(len - segment_width - 1), function(pos1) {
     t1_seg <- t1[pos1:(pos1 + segment_width)]
@@ -79,7 +80,10 @@ pdc_synchrony <- function(t1,
     )
     
     if (length(search_window) < search_width*2+1) {
-      search_window <- rep(NA, search_width * 2 + 1)
+      #search_window <- rep(NA, search_width * 2 + 1)
+      full_len <- search_width*2+1
+      # prefill with NA
+      search_window <- c(rep(NA,full_len-length(search_window)),search_window)
     }
     
     search_window
@@ -120,7 +124,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   
   lag_df <- data.frame(time = 1:length(min_lag) + x$search_width, min_lag)
   
-  result %>% na.omit() %>%
+  result %>% #na.omit() %>%
     ggplot(aes(x = Y, y = X, fill = Z)) + geom_raster(interpolate = FALSE) +
     #geom_tile()+
     geom_hline(
