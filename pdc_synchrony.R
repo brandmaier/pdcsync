@@ -115,8 +115,10 @@ pdc_synchrony <- function(t1,
   
 }
 
-plot.pdcsync <- function(x, ...) {
-  lag_threshold <- x$lag_threshold
+plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
+  
+  if (is.null(lag_threshold))
+    lag_threshold <- x$lag_threshold
   
   result <- x$rr %>%
     as_tibble() %>%
@@ -127,8 +129,8 @@ plot.pdcsync <- function(x, ...) {
     mutate(Y = as.numeric(gsub("V", "", Y)))
   
   # determine minimum curve fit
-  min_vals <- unlist(apply(result, 2, min))
-  min_lag <- unlist(apply(result, 2, which.min))
+  min_vals <- unlist(apply(x$rr, 2, min))
+  min_lag <- unlist(apply(x$rr, 2, which.min))
   min_lag[abs(min_vals) > lag_threshold] <- NA
   
   lag_df <- data.frame(time = 1:length(min_lag), min_lag)
@@ -151,7 +153,7 @@ plot.pdcsync <- function(x, ...) {
       breaks = c(0, 0.0005, 0.005, 0.05, 0.05, 0.5)
     ) +
     
-    #  geom_line(data=lag_df,aes(x=time,y=min_lag,fill=NULL),lwd=2,color="red")
+      geom_line(data=lag_df,aes(x=time,y=min_lag,fill=NULL),lwd=2,color="red")+
     NULL
 }
 
