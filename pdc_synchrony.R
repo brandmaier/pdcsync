@@ -1,27 +1,6 @@
 library(pdc)
 library(tidyverse)
 
-#
-# (I) generate two time series according to ARIMA
-#       and break their synchrony in-between
-#
-set.seed(5099)
-N <- 1000
-dat <- data.frame(t1 = arima.sim(model = list(ar = 0.2), n = N), t2 = rnorm(N))
-
-t1 <- dat$t1
-t2 <- dat$t2
-
-# t1 is later than t2; t2 leads
-#t2 <- c(0,0,0,t1[1:(length(t1)-3)])+ rnorm(length(t1),0,0.01)
-
-# t2 is later than t1; t1 leads
-t2 <- c(t1[4:(length(t1))], 0, 0, 0) + rnorm(N, 0, 0.001)
-
-#t2 <- t1 + rnorm(N,0,0.001)
-
-# no synchrony between 200 and 400
-t2[200:400] <- runif(201, 0, 1)
 
 #' @title pdc_synchrony
 #'
@@ -74,7 +53,8 @@ pdc_synchrony <- function(t1,
   
   max_len <- (len - segment_width - 1)
   
-  
+  # first time point of return object corresponds to
+
   rr <- sapply(1:(len - segment_width - 1), function(pos1) {
     t1_seg <- t1[pos1:(pos1 + segment_width)]
     cb1 <- pdc::codebook(t1_seg, m = m, t = t)
@@ -84,9 +64,9 @@ pdc_synchrony <- function(t1,
     t2_end <- min(length(t2), pos1 + search_width)
     t2_rng <- t2_start:t2_end
     
-    if (length(t2_rng) < (search_width * 2 + 1)) {
-      return(rep(NA, search_width * 2 + 1))
-    }
+    #if (length(t2_rng) < (search_width * 2 + 1)) {
+    #  return(rep(NA, search_width * 2 + 1))
+    #}
     
     search_window <- sapply(
       t2_start:t2_end,
@@ -98,6 +78,10 @@ pdc_synchrony <- function(t1,
       }
     )
     
+    if (length(search_window) < search_width*2+1) {
+      search_window <- rep(NA, search_width * 2 + 1)
+    }
+    
     search_window
     
     
@@ -106,6 +90,7 @@ pdc_synchrony <- function(t1,
   result <- list(
     rr = rr,
     lag_threshold = lag_threshold,
+    search_width = search_width,
     m = m,
     t = t
   )
@@ -133,7 +118,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   min_lag <- unlist(apply(x$rr, 2, which.min))
   min_lag[abs(min_vals) > lag_threshold] <- NA
   
-  lag_df <- data.frame(time = 1:length(min_lag), min_lag)
+  lag_df <- data.frame(time = 1:length(min_lag) + x$search_width, min_lag)
   
   result %>% na.omit() %>%
     ggplot(aes(x = Y, y = X, fill = Z)) + geom_raster(interpolate = FALSE) +
@@ -152,7 +137,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
       high = "white",
       breaks = c(0, 0.0005, 0.005, 0.05, 0.05, 0.5)
     ) +
-    
+    labs(fill='Sync.\nStrength')+
       geom_line(data=lag_df,aes(x=time,y=min_lag,fill=NULL),lwd=2,color="red")+
     NULL
 }
@@ -166,7 +151,3 @@ print.pdcsync <- function(x, ...) {
     ". Use plot() command to display synchrony profile.\n"
   )
 }
-
-sync <- pdc_synchrony(t1, t2, m = 4)
-
-plot(sync)
