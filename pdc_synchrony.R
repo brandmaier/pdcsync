@@ -1,0 +1,130 @@
+library(pdc)
+
+#
+# (I) generate two time series according to ARIMA
+#       and break their synchrony in-between
+#
+set.seed(5099)
+N <- 1000
+dat <- data.frame(t1=arima.sim(model=list(ar=0.2),n=N),t2=rnorm(N))
+
+t1 <- dat$t1
+t2 <- dat$t2
+
+# t1 is later than t2; t2 leads
+#t2 <- c(0,0,0,t1[1:(length(t1)-3)])+ rnorm(length(t1),0,0.01)
+
+# t2 is later than t1; t1 leads
+t2 <- c(t1[4:(length(t1))],0,0,0)+rnorm(N,0,0.001)
+
+#t2 <- t1 + rnorm(N,0,0.001)
+
+# no synchrony between 200 and 400
+t2[200:400] <- runif(201,0,1)
+
+#' @title pdc_synchrony
+#'
+#' @param t1
+#' @param t2
+#' @param segment_width
+#' @param search_width
+#'
+#' @export
+pdc_synchrony <- function(t1, t2, 
+                          segment_width = 100,
+                          search_width = 25,
+                          lag_threshold = 0.05, 
+                          m = NULL, 
+                          t = NULL) {
+
+if (length(t1) != length(t2)) stop("Time series not of identical length")
+
+len <- length(t1)
+
+if (is.null(m) | is.null(t)) {
+  
+  if (is.null(m)) {
+    m_min <- 3
+    m_max <- 7
+  } else {
+    m_min <- m
+    m_max <- m
+  }
+  if (is.null(t)) {
+    t_min <- 1
+    t_max <- 1
+  } else {
+    t_min<-t
+    t_max<-t
+  }
+  
+  mine <- pdc::entropyHeuristic(t1, t.min = t_min, t.max = t_max,
+                                m.min = m_min, m.max = m_max)
+  m <- mine$m
+  t <- mine$t
+}
+
+
+
+max_len <- (len-segment_width-1)
+
+
+result <- sapply(1:(len-segment_width-1), function(pos1){
+
+  t1_seg <- t1[pos1:(pos1+segment_width)]
+  cb1<-pdc::codebook(t1_seg, m=m, t=t)
+  
+  # searchlight
+  t2_start <- max(1, pos1-search_width)
+  t2_end <- min(length(t2), pos1+search_width)
+  t2_rng <- t2_start:t2_end
+  #for (pos2 in t2_start:t2_end){
+  #  t2_seg <- t2[pos2:(pos2+segment_width)]
+  #  cb2 <- pdc::codebook(t2_seg, m=m, t=t)
+  #}
+  #cat("Searching from ", t2_start, " to ", t2_end, " with a window of size",length(t2_rng) ,"\n")
+  
+  if (length(t2_rng) < (search_width*2+1)){
+    return(rep(NA,search_width*2+1))
+  }
+  
+  search_window <- sapply(t2_start:t2_end, FUN=function(pos2){
+   # cat("  |- Pos 2 from",pos2," to ", (pos2+segment_width),"\n")
+    t2_seg <- t2[pos2:(pos2+segment_width)]
+    cb2 <- pdc::codebook(t2_seg, m=m, t=t)
+    hellingerDistance(cb1, cb2)
+  })
+  
+  search_window
+
+  
+})
+
+return(rr)
+
+}
+
+rr<-result %>%
+as_tibble() %>%
+  rowid_to_column(var="X") %>%
+  gather(key="Y", value="Z", -1) %>%
+  
+  # Change Y to numeric
+  mutate(Y=as.numeric(gsub("V","",Y))) 
+
+min_vals <- unlist(apply(result,2, min))
+min_lag <- unlist(apply(result, 2, which.min))
+min_lag[abs(min_vals)>lag_threshold] <- NA
+
+lag_df <- data.frame(time=1:length(min_lag),min_lag)
+
+rr %>% na.omit() %>%
+  ggplot(aes(x=Y,y=X,fill=Z)) + geom_raster(interpolate = FALSE)+#geom_tile()+
+  geom_hline(yintercept=26,alpha=.7,lwd=2,color="black")+
+  xlab("Time")+ylab("Synchrony Offset\nLower-half values indicate that T1 leads")+
+  #scale_fill_gradient(low = "blue", high = "white") +
+  scale_fill_gradient(trans = "log", low = "blue", high = "white", 
+                      breaks = c(0, 0.0005, 0.005, 0.05, 0.05, 0.5))+
+#  coord_flip()+
+  geom_line(data=lag_df,aes(x=time,y=min_lag,fill=NULL),lwd=2,color="red")
+
