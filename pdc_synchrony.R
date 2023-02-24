@@ -1,4 +1,5 @@
 library(pdc)
+library(tidyverse)
 
 #
 # (I) generate two time series according to ARIMA
@@ -69,7 +70,7 @@ if (is.null(m) | is.null(t)) {
 max_len <- (len-segment_width-1)
 
 
-result <- sapply(1:(len-segment_width-1), function(pos1){
+rr <- sapply(1:(len-segment_width-1), function(pos1){
 
   t1_seg <- t1[pos1:(pos1+segment_width)]
   cb1<-pdc::codebook(t1_seg, m=m, t=t)
@@ -78,12 +79,7 @@ result <- sapply(1:(len-segment_width-1), function(pos1){
   t2_start <- max(1, pos1-search_width)
   t2_end <- min(length(t2), pos1+search_width)
   t2_rng <- t2_start:t2_end
-  #for (pos2 in t2_start:t2_end){
-  #  t2_seg <- t2[pos2:(pos2+segment_width)]
-  #  cb2 <- pdc::codebook(t2_seg, m=m, t=t)
-  #}
-  #cat("Searching from ", t2_start, " to ", t2_end, " with a window of size",length(t2_rng) ,"\n")
-  
+ 
   if (length(t2_rng) < (search_width*2+1)){
     return(rep(NA,search_width*2+1))
   }
@@ -100,11 +96,20 @@ result <- sapply(1:(len-segment_width-1), function(pos1){
   
 })
 
-return(rr)
+result <- list(rr=rr, lag_threshold=lag_threshold, m=m, t=t)
+class(result) <- "pdcsync"
+#attr(result,"m") <- m
+#attr(result,"t") <- t
+
+return(result)
 
 }
 
-rr<-result %>%
+plot.pdcsync <- function(x, ...) {
+
+  lag_threshold <- x$lag_threshold
+  
+result <- x$rr %>%
 as_tibble() %>%
   rowid_to_column(var="X") %>%
   gather(key="Y", value="Z", -1) %>%
@@ -118,7 +123,7 @@ min_lag[abs(min_vals)>lag_threshold] <- NA
 
 lag_df <- data.frame(time=1:length(min_lag),min_lag)
 
-rr %>% na.omit() %>%
+result %>% na.omit() %>%
   ggplot(aes(x=Y,y=X,fill=Z)) + geom_raster(interpolate = FALSE)+#geom_tile()+
   geom_hline(yintercept=26,alpha=.7,lwd=2,color="black")+
   xlab("Time")+ylab("Synchrony Offset\nLower-half values indicate that T1 leads")+
@@ -128,3 +133,12 @@ rr %>% na.omit() %>%
 #  coord_flip()+
   geom_line(data=lag_df,aes(x=time,y=min_lag,fill=NULL),lwd=2,color="red")
 
+}
+
+print.pdcsync <- function(x, ...) {
+  cat("PDC Synchrony object of two time series; embedding dimension m =",x$m," and t = ",x$t,". Use plot() command to display synchrony profile.\n")
+}
+
+sync <- pdc_synchrony(t1, t2)
+
+plot(sync)
