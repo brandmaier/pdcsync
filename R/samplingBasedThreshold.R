@@ -1,6 +1,6 @@
 #' @export
 #' 
-samplingBasedThreshold <- function(t1, t2, window_size, m, t num_samples = 2000) {
+samplingBasedThreshold <- function(t1, t2, window_size, m, t, num_samples = 2000) {
   
   emp_dist <- replicate(n=num_samples, expr={
   pos1 <- round(runif(1, 1, length(t1)-window_size))
@@ -15,5 +15,5 @@ samplingBasedThreshold <- function(t1, t2, window_size, m, t num_samples = 2000)
   hellingerDistance(cb1, cb2)
   })
   
-  mean(emp_dist)-sqrt(var(emp_dist))*2
+  max(0.001, mean(emp_dist)-sqrt(var(emp_dist))*2)
 }

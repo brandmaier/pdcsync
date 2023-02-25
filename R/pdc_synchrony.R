@@ -14,7 +14,7 @@ pdc_synchrony <- function(t1,
                           t2,
                           segment_width = 100,
                           search_width = 25,
-                          lag_threshold = 0.05,
+                          lag_threshold = NULL,
                           m = NULL,
                           t = NULL) {
   if (length(t1) != length(t2))
@@ -49,12 +49,11 @@ pdc_synchrony <- function(t1,
     t <- mine$t
   }
   
+  if (is.null(lag_threshold)) {
+    lag_threshold <- samplingBasedThreshold(t1, t2, segment_width, m, t)
+  }
   
-  
-  max_len <- (len - segment_width - 1)
-  
-  # first time point of return object corresponds to
-  #
+  max_len <- (len - search_width - 1)
 
   rr <- sapply(1:(len - segment_width - 1), function(pos1) {
     t1_seg <- t1[pos1:(pos1 + segment_width)]
@@ -65,10 +64,6 @@ pdc_synchrony <- function(t1,
     t2_start <- max(1, pos1 - search_width)
     t2_end <- min(length(t2), pos1 + search_width)
     t2_rng <- t2_start:t2_end
-    
-    #if (length(t2_rng) < (search_width * 2 + 1)) {
-    #  return(rep(NA, search_width * 2 + 1))
-    #}
     
     search_window <- sapply(
       t2_start:t2_end,
@@ -125,7 +120,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   min_lag <- unlist(apply(x$rr, 2, which.min))
   min_lag[abs(min_vals) > lag_threshold] <- NA
   
-  lag_df <- data.frame(time = 1:length(min_lag) + x$search_width, min_lag)
+  lag_df <- data.frame(time = 1:length(min_lag), min_lag)
   
   result %>% #na.omit() %>%
     ggplot(aes(x = Y, y = X, fill = Z)) + geom_raster(interpolate = FALSE) +
