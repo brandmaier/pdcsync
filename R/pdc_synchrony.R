@@ -105,6 +105,8 @@ pdc_synchrony <- function(t1,
   
 }
 
+
+#' @exportS3method plot pdcsync
 plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   
   if (is.null(lag_threshold))
@@ -147,6 +149,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
     NULL
 }
 
+#' @exportS3method plot pdcsync
 print.pdcsync <- function(x, ...) {
   cat(
     "PDC Synchrony object of two time series; embedding dimension m =",

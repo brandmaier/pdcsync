@@ -1,4 +1,3 @@
-source("pdc_synchrony.R")
 
 #
 # (I) generate two time series according to ARIMA
@@ -9,7 +8,7 @@ source("pdc_synchrony.R")
 # length of time series
 N <- 1000
 
-t1 < arima.sim(model = list(ar = 0.2), n = N)
+t1 <- arima.sim(model = list(ar = 0.2), n = N)
 
 # t2 is later than t1; t1 leads
 t2 <- c(t1[4:(length(t1))], 0, 0, 0) + rnorm(N, 0, 0.001)
