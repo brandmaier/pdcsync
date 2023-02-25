@@ -1,1 +1,1 @@
-#' @importFrom pdc codebook
+#' @importFrom pdc codebook, hellingerDistance
