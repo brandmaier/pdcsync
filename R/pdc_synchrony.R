@@ -60,7 +60,8 @@ pdc_synchrony <- function(t1,
     t1_seg <- t1[pos1:(pos1 + segment_width)]
     cb1 <- pdc::codebook(t1_seg, m = m, t = t)
     
-    # searchlight
+    # searchlight (all start positions to search the t2 series;
+    # between pos1-search_width and pos1+search_width
     t2_start <- max(1, pos1 - search_width)
     t2_end <- min(length(t2), pos1 + search_width)
     t2_rng <- t2_start:t2_end

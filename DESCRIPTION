@@ -1,0 +1,9 @@
+Package: pdcsync
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2023-02-25
+Author: Andreas M. Brandmaier
+Maintainer: Andreas M. Brandmaier <andreas.brandmaier@medicalschool-berlin.de>
+Description: More about what it does (maybe more than one line)
+License: MIT
