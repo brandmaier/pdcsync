@@ -4,13 +4,13 @@ library(ggplot2)
 
 #' @title pdc_synchrony
 #'
-#' @param t1
-#' @param t2
-#' @param segment_width
-#' @param search_width
+#' @param t1 first time series; must be a numeric vector
+#' @param t2 second time series; must be a numeric vector
+#' @param segment_width width of the segment
+#' @param search_width search width 
 #'
 #' @export
-pdc_synchrony <- function(t1,
+pdcsync <- function(t1,
                           t2,
                           segment_width = 100,
                           search_width = 25,
@@ -101,7 +101,7 @@ pdc_synchrony <- function(t1,
 }
 
 
-#' @exportS3method plot pdcsync
+#' @exportS3Method plot pdcsync
 plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   
   if (is.null(lag_threshold))
@@ -144,7 +144,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
     NULL
 }
 
-#' @exportS3method plot pdcsync
+#' @exportS3Method print pdcsync
 print.pdcsync <- function(x, ...) {
   cat(
     "PDC Synchrony object of two time series; embedding dimension m =",

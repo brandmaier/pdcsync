@@ -8,3 +8,4 @@ Maintainer: Andreas M. Brandmaier <andreas.brandmaier@medicalschool-berlin.de>
 Description: More about what it does (maybe more than one line)
 License: MIT
 Imports: pdc, cowplot
+RoxygenNote: 7.2.3
