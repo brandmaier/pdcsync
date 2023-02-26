@@ -4,14 +4,13 @@ author: "Andreas M. Brandmaier"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started}
+  %\VignetteIndexEntry{Getting started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(pdcsync)
 ```
 
 ## R Markdown
@@ -38,7 +37,7 @@ t2[200:400] <- runif(201, 0, 1)
 
 Call the synchronization detection:
 
-```{r}
+```{r pdcsync}
 
 sync <- pdc_synchrony(t1, t2)
 
