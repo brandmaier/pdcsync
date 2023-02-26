@@ -15,4 +15,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(pdcsync)
+
+N <- 1000
+
+t1 <- arima.sim(model = list(ar = 0.2), n = N)
+t2 <- arima.sim(model = list(ar = 0.2), n = N)
+
+t2[500:700] <- t1[500:700+10]
+```
+
+```{r}
+result <- pdcsync(t1, t2, 100, 10, 0.001)
+
+syncplot(result)
 ```

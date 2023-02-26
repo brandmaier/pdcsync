@@ -1,6 +1,4 @@
-library(pdc)
-library(tidyverse)
-library(ggplot2)
+
 
 #' @title pdc_synchrony
 #'
@@ -9,6 +7,7 @@ library(ggplot2)
 #' @param segment_width width of the segment
 #' @param search_width search width 
 #'
+#' @importFrom pdc hellingerDistance
 #' @export
 pdcsync <- function(t1,
                           t2,
@@ -17,9 +16,10 @@ pdcsync <- function(t1,
                           lag_threshold = NULL,
                           m = NULL,
                           t = NULL) {
-  if (length(t1) != length(t2))
+  if (length(t1) != length(t2)) {
     stop("Time series not of identical length")
-  
+  }
+    
   len <- length(t1)
   
   if (is.null(m) | is.null(t)) {
@@ -71,7 +71,7 @@ pdcsync <- function(t1,
         # cat("  |- Pos 2 from",pos2," to ", (pos2+segment_width),"\n")
         t2_seg <- t2[pos2:(pos2 + segment_width)]
         cb2 <- pdc::codebook(t2_seg, m = m, t = t)
-        hellingerDistance(cb1, cb2)
+        pdc::hellingerDistance(cb1, cb2)
       }
     )
     

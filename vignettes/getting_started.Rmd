@@ -39,7 +39,7 @@ Call the synchronization detection:
 
 ```{r pdcsync}
 
-sync <- pdc_synchrony(t1, t2)
+sync <- pdcsync(t1, t2)
 
 plot(sync)
 
