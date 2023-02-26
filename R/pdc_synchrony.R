@@ -88,6 +88,8 @@ pdcsync <- function(t1,
   })
   
   result <- list(
+    t1 = t1,
+    t2 = t2,
     rr = rr,
     lag_threshold = lag_threshold,
     search_width = search_width,
@@ -123,8 +125,8 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   lag_df <- data.frame(time = 1:length(min_lag), min_lag)
   
   result %>% #na.omit() %>%
-    ggplot(aes(x = Y, y = X, fill = Z)) + geom_raster(interpolate = FALSE) +
-    #geom_tile()+
+    ggplot(aes(x = Y, y = X, fill = Z)) + 
+    geom_raster(interpolate = FALSE) +
     geom_hline(
       yintercept = 26,
       alpha = .7,

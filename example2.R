@@ -21,6 +21,7 @@ t2[200:400] <- runif(201, 0, 1)
 #
 
 
-sync <- pdc_synchrony(t1, t2,segment_width = 50)
+sync <- pdcsync(t1, t2,segment_width = 50)
 
+syncplot(sync)
 
