@@ -29,7 +29,7 @@ plot.pdcsync <- function(x, lag_threshold=NULL,
   min_lag[abs(min_vals) > lag_threshold] <- NA
   
   lag_df <- data.frame(time = 1:length(min_lag), min_lag)
-  lag_df <- lag_df[!is.na(min_lag),]
+
   
   ycenter <- (dim(x$rr)[1]-1)/2
   
