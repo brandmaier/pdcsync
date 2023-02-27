@@ -39,22 +39,22 @@ plot(result)
 ```
 
 Suppress the best-fitting synchronisation line:
-```{r}
+```{r p3, warning=FALSE}
 plot(result, show_sync_line = FALSE)
 ```
 
 Show the line again and vary output:
-```{r}
+```{r p4, warning=FALSE}
 plot(result, show_sync_line = TRUE, sync_lwd=1, sync_col="green")
 ```
 
 Plot the extended synchronisation profile including the time series.
-```{r}
+```{r p5, warning=FALSE}
 syncplot(result)
 ```
 
-Annotate segments that are "leading" segments
+Annotate segments that are "leading" segments with green areas:
 
-```{r}
+```{r p6, warning=FALSE}
 syncplot(result, annotate_segments = TRUE)
 ```
