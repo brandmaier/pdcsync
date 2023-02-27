@@ -11,6 +11,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
 ```
 
 ## R Markdown
@@ -38,9 +39,10 @@ t2[200:400] <- runif(201, 0, 1)
 Call the synchronization detection:
 
 ```{r pdcsync}
-
 sync <- pdcsync(t1, t2)
 ```
+
+Plot the synchronization profile
 
 ```{r plot}
 plot(sync)

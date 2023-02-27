@@ -11,6 +11,8 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(1168385)
 ```
 
 ```{r}
@@ -25,7 +27,16 @@ t2[500:700] <- t1[500:700+10]
 ```
 
 ```{r}
-result <- pdcsync(t1, t2, 100, 10, 0.001)
+result <- pdcsync(t1, t2, 100, 10)
+```
 
+Plot the extended synchronisation profile including the time series.
+```{r}
 syncplot(result)
+```
+
+Annotate segments that are "leading" segments
+
+```{r}
+syncplot(result, annotate_segments = TRUE)
 ```

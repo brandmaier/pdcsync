@@ -10,6 +10,8 @@ License: MIT
 Imports: 
   pdc, 
   cowplot, 
-  tidyverse, 
+  dplyr, 
+  tidyr,
+  tibble,
   ggplot2
 RoxygenNote: 7.2.3

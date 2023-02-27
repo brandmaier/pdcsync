@@ -102,7 +102,8 @@ pdcsync <- function(t1,
   
 }
 
-
+#' @importFrom dplyr `%>%`
+#' @import ggplot2
 #' @exportS3Method plot pdcsync
 plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
   
@@ -110,12 +111,12 @@ plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
     lag_threshold <- x$lag_threshold
   
   result <- x$rr %>%
-    as_tibble() %>%
-    rowid_to_column(var = "X") %>%
-    gather(key = "Y", value = "Z",-1) %>%
+    dplyr::as_tibble(.name_repair = "universal") %>%
+    tibble::rowid_to_column(var = "X") %>%
+    tidyr::gather(key = "Y", value = "Z",-1) %>%
     
     # Change Y to numeric
-    mutate(Y = as.numeric(gsub("V", "", Y)))
+    dplyr::mutate(Y = as.numeric(gsub("V", "", Y)))
   
   # determine minimum curve fit
   min_vals <- unlist(apply(x$rr, 2, min))
