@@ -12,7 +12,7 @@ samplingBasedThreshold <-
            window_size,
            m,
            t,
-           num_samples = 2000,
+           num_samples = 5000,
            alpha = 0.01) {
     
     if (alpha<=0 | alpha>=1) {

@@ -3,14 +3,12 @@
 #' @import ggplot2
 #' @importFrom dplyr `%>%`
 #' @export
-syncplot <- function(x, annotated_segments = FALSE, ...) {
+syncplot <- function(x, annotated_segments = FALSE, show_sync_line = TRUE, ...) {
   t1 <- x$t1
   t2 <- x$t2
   
-  pp <- plot(x, lag_threshold = 0.3) +
-    geom_vline(xintercept = 200, alpha = .4) +
-    geom_vline(xintercept = 400, alpha = .4) +
-    theme(legend.position = "none") + xlim(0, 1000)
+  pp <- plot.pdcsync(x, show_sync_line = show_sync_line)+
+    theme(legend.position = "none") + xlim(0, max(length(t1),length(t2)))
   
   t1p <-
     ggplot(data.frame(time = 1:length(t1), val = t1), aes(x = time, y = val)) +
@@ -24,9 +22,10 @@ syncplot <- function(x, annotated_segments = FALSE, ...) {
   # determine minimum curve fit (DUPLICATED CODE!)
   min_vals <- unlist(apply(x$rr, 2, min))
   min_lag <- unlist(apply(x$rr, 2, which.min))
-  min_lag[abs(min_vals) > lag_threshold] <- NA
+  if (!is.null(x$lag_treshold))
+    min_lag[abs(min_vals) > x$lag_threshold] <- NA
   
-  if (annotaged_segments) {
+  if (annotated_segments) {
     # center lag time series
     min_lag <- min_lag - (dim(x$rr)[1] - 1) / 2
     min_lag[is.na(min_lag)] <- 0
@@ -66,6 +65,8 @@ syncplot <- function(x, annotated_segments = FALSE, ...) {
               alpha = 0.2,
               color = "green"
             )
+        } else {
+          # pass
         }
         cur_start_pos <- i
         cur_area <- min_lag[i]
