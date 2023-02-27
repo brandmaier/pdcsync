@@ -22,7 +22,7 @@ t2[200:400] <- runif(201, 0, 1)
 #
 
 
-sync <- pdc_synchrony(t1, t2)
+sync <- pdcsync(t1, t2)
 
 plot(sync)
 

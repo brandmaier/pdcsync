@@ -16,6 +16,7 @@ pdcsync <- function(t1,
                           lag_threshold = NULL,
                           m = NULL,
                           t = NULL) {
+  
   if (length(t1) != length(t2)) {
     stop("Time series not of identical length")
   }
@@ -50,7 +51,7 @@ pdcsync <- function(t1,
   }
   
   if (is.null(lag_threshold)) {
-    lag_threshold <- samplingBasedThreshold(t1, t2, segment_width, m, t)
+    lag_threshold <- samplingBasedThreshold(t1, t2, window_size=segment_width, m=m, t=t)
   }
   
   max_len <- (len - search_width - 1)
@@ -102,50 +103,6 @@ pdcsync <- function(t1,
   
 }
 
-#' @importFrom dplyr `%>%`
-#' @import ggplot2
-#' @exportS3Method plot pdcsync
-plot.pdcsync <- function(x, lag_threshold=NULL, ...) {
-  
-  if (is.null(lag_threshold))
-    lag_threshold <- x$lag_threshold
-  
-  result <- x$rr %>%
-    dplyr::as_tibble(.name_repair = "universal") %>%
-    tibble::rowid_to_column(var = "X") %>%
-    tidyr::gather(key = "Y", value = "Z",-1) %>%
-    
-    # Change Y to numeric
-    dplyr::mutate(Y = as.numeric(gsub("V", "", Y)))
-  
-  # determine minimum curve fit
-  min_vals <- unlist(apply(x$rr, 2, min))
-  min_lag <- unlist(apply(x$rr, 2, which.min))
-  min_lag[abs(min_vals) > lag_threshold] <- NA
-  
-  lag_df <- data.frame(time = 1:length(min_lag), min_lag)
-  
-  result %>% #na.omit() %>%
-    ggplot(aes(x = Y, y = X, fill = Z)) + 
-    geom_raster(interpolate = FALSE) +
-    geom_hline(
-      yintercept = 26,
-      alpha = .7,
-      lwd = 2,
-      color = "black"
-    ) +
-    xlab("Time") + ylab("Synchrony Offset\nLower-half values indicate that T1 leads") +
-    #scale_fill_gradient(low = "blue", high = "white") +
-    scale_fill_gradient(
-      trans = "log",
-      low = "blue",
-      high = "white",
-      breaks = c(0, 0.0005, 0.005, 0.05, 0.05, 0.5)
-    ) +
-    labs(fill='Sync.\nStrength')+
-      geom_line(data=lag_df,aes(x=time,y=min_lag,fill=NULL),lwd=2,color="red")+
-    NULL
-}
 
 #' @exportS3Method print pdcsync
 print.pdcsync <- function(x, ...) {

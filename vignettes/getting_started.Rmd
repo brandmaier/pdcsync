@@ -22,7 +22,9 @@ Load the library.
 library(pdcsync)
 ```
 
-Simulate two time series
+Simulate two time series. The first time series is generated from an autoregressive process. 
+The second time series is a time-shifted version of the first one with some added minimal noise.
+There is an induced complete break of symmetry between time points 200 and 400.
 
 ```{r ar}
 N <- 1000
@@ -46,5 +48,11 @@ Plot the synchronization profile
 
 ```{r plot}
 plot(sync)
+```
+
+Plot the synchronization profile using the extended plot
+
+```{r plot2}
+syncplot(sync)
 
 ```
