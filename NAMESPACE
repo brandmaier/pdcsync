@@ -3,6 +3,7 @@
 S3method(plot,pdcsync)
 S3method(print,pdcsync)
 export(averageAggregatedSynchrony)
+export(getListOfSynchronisedBlocks)
 export(pdcsync)
 export(samplingBasedThreshold)
 export(syncplot)
