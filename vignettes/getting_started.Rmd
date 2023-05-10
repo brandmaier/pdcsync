@@ -75,7 +75,7 @@ sync <- pdcsync(t1, t2)
 
 Plot the synchronization profile using the extended plot method:
 
-```{r plot2}
+```{r plot2b}
 syncplot(sync)
 
 ```
