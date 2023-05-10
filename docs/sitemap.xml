@@ -22,9 +22,15 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
+    <loc>/reference/averageAggregatedSynchrony.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
     <loc>/reference/pdcsync.html</loc>
+  </url>
+  <url>
+    <loc>/reference/samplingBasedThreshold.html</loc>
   </url>
 </urlset>

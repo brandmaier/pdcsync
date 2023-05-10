@@ -75,7 +75,7 @@
                         <h4 data-toc-skip class="author">Andreas M.
 Brandmaier</h4>
             
-            <h4 data-toc-skip class="date">2023-02-27</h4>
+            <h4 data-toc-skip class="date">2023-05-10</h4>
       
       
       <div class="hidden name"><code>getting_started.Rmd</code></div>
@@ -112,13 +112,40 @@ complete break of symmetry between time points 200 and 400.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sync</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: Transformation introduced infinite values in discrete y-axis</span></span></code></pre>
 <p><img src="getting_started_files/figure-html/plot-1.png" width="700"></p>
-<p>Plot the synchronization profile using the extended plot</p>
+<p>Plot the synchronization profile using the extended plot method:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">syncplot</span><span class="op">(</span><span class="va">sync</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Don't know how to automatically pick scale for object of type <span style="color: #0000BB;">&lt;ts&gt;</span>. Defaulting</span></span>
 <span><span class="co">## to continuous.</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: Transformation introduced infinite values in discrete y-axis</span></span></code></pre>
 <p><img src="getting_started_files/figure-html/plot2-1.png" width="700"></p>
+<p>Compute an (experimental) global synchronisation measure (between 0
+and 1, with higher values indicating stronger synchrony).</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/averageAggregatedSynchrony.html">averageAggregatedSynchrony</a></span><span class="op">(</span><span class="va">sync</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.7419336</span></span></code></pre>
+<p>Now, we further reduce the synchronisation and re-run the algorithm
+again.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># no synchrony between 200 and 400</span></span>
+<span><span class="va">t2</span><span class="op">[</span><span class="fl">200</span><span class="op">:</span><span class="fl">600</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">201</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in t2[200:600] &lt;- runif(201, 0, 1): number of items to replace is not a</span></span>
+<span><span class="co">## multiple of replacement length</span></span></code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sync</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pdcsync.html">pdcsync</a></span><span class="op">(</span><span class="va">t1</span>, <span class="va">t2</span><span class="op">)</span></span></code></pre></div>
+<p>Plot the synchronization profile using the extended plot method:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">syncplot</span><span class="op">(</span><span class="va">sync</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Don't know how to automatically pick scale for object of type <span style="color: #0000BB;">&lt;ts&gt;</span>. Defaulting</span></span>
+<span><span class="co">## to continuous.</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Transformation introduced infinite values in discrete y-axis</span></span></code></pre>
+<p><img src="getting_started_files/figure-html/plot2b-1.png" width="700"></p>
+<p>Compute an (experimental) global synchronisation measure (between 0
+and 1, with higher values indicating stronger synchrony). This value is
+lower than before because global synchronisation decreased.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/averageAggregatedSynchrony.html">averageAggregatedSynchrony</a></span><span class="op">(</span><span class="va">sync</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.5348691</span></span></code></pre>
 </div>
   </div>
 
