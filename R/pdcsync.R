@@ -7,6 +7,7 @@
 #' @param segment_width width of the segment
 #' @param search_width search width 
 #'
+#'
 #' @importFrom pdc hellingerDistance
 #' @export
 pdcsync <- function(t1,

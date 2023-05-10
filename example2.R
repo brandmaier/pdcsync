@@ -3,6 +3,8 @@
 # (I) generate two time series according to ARIMA
 #       and break their synchrony in-between
 #
+#     there is no synchrony between time point 200 and 400
+#
 library(pdcsync)
 
 # length of time series

@@ -56,3 +56,9 @@ Plot the synchronization profile using the extended plot
 syncplot(sync)
 
 ```
+
+Compute an (experimental) global synchronisation measure (between 0 and 1, with higher values indicating stronger synchrony). 
+
+```{r}
+averageAggregatedSynchrony(sync)
+```

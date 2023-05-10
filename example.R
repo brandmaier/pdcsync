@@ -14,6 +14,18 @@ t1 <- arima.sim(model = list(ar = 0.2), n = N)
 t2 <- c(t1[4:(length(t1))], 0, 0, 0) + rnorm(N, 0, 0.001)
 
 
+
+sync <- pdcsync(t1, t2)
+
+plot(sync)
+
+averageAggregatedSynchrony(sync)
+
+
+#
+# (III) now introduce some de-synchronization
+#
+
 # no synchrony between 200 and 400
 t2[200:400] <- runif(201, 0, 1)
 
@@ -26,3 +38,4 @@ sync <- pdcsync(t1, t2)
 
 plot(sync)
 
+averageAggregatedSynchrony(sync)
