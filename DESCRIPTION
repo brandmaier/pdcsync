@@ -2,7 +2,7 @@ Package: pdcsync
 Type: Package
 Title: Compute synchronisation between two time series based on the permutation distribution
 Version: 0.1
-Date: 2023-02-25
+Date: 2023-05-10
 Author: Andreas M. Brandmaier and Uwe Altmann
 Maintainer: Andreas M. Brandmaier <andreas.brandmaier@medicalschool-berlin.de>
 Description: More about what it does (maybe more than one line)

@@ -1,3 +1,6 @@
+#' @title Heuristically determine a threshold for synchronisation
+#' @name samplingBasedThreshold
+#'
 #' @param m embedding dimension
 #' @param t time-delayed embedding
 #' @param window_size integer; size of the window
