@@ -50,7 +50,7 @@ Plot the synchronization profile
 plot(sync)
 ```
 
-Plot the synchronization profile using the extended plot
+Plot the synchronization profile using the extended plot method:
 
 ```{r plot2}
 syncplot(sync)
@@ -58,6 +58,29 @@ syncplot(sync)
 ```
 
 Compute an (experimental) global synchronisation measure (between 0 and 1, with higher values indicating stronger synchrony). 
+
+```{r}
+averageAggregatedSynchrony(sync)
+```
+
+Now, we further reduce the synchronisation and re-run the algorithm again.
+
+```{r}
+# no synchrony between 200 and 400
+t2[200:600] <- runif(201, 0, 1)
+sync <- pdcsync(t1, t2)
+```
+
+
+
+Plot the synchronization profile using the extended plot method:
+
+```{r plot2}
+syncplot(sync)
+
+```
+
+Compute an (experimental) global synchronisation measure (between 0 and 1, with higher values indicating stronger synchrony). This value is lower than before because global synchronisation decreased.
 
 ```{r}
 averageAggregatedSynchrony(sync)
